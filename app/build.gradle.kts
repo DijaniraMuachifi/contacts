@@ -33,6 +33,8 @@ android {
 
 dependencies {
 
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
     val room_version = "2.6.1"
 
     implementation("androidx.room:room-runtime:$room_version")
