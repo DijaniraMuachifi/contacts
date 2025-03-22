@@ -1,64 +1,89 @@
 package com.example.contacts;
 
+
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link listagem#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
+import com.example.contacts.database.AppDatabase;
+import com.example.contacts.models.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
+
 public class listagem extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public listagem() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment listagem.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static listagem newInstance(String param1, String param2) {
-        listagem fragment = new listagem();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private AppDatabase db;
+    private RecyclerView recyclerView; //mostra os dados, facilita e torna a exibicao de grande conjunto de dados
+    private ContactAdapter adapter; //adapta os dados para a renderizacao
+    private SearchView searchView; //pesquisa os dados
+    private ImageView favoriteIcon; //icone favorito
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_listagem, container, false);
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        searchView = view.findViewById(R.id.searchView);
+        favoriteIcon = view.findViewById(R.id.favoriteIcon);
+
+        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "contact_db").allowMainThreadQueries().build();
+
+        loadContacts();
+
+        FloatingActionButton btnNew = view.findViewById(R.id.btnnew);
+        btnNew.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.action_listagem_to_addContact));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+
+        favoriteIcon.setOnClickListener(v -> {
+            Navigation.findNavController(view).navigate(R.id.action_listagem_to_listFavorite);
+        });
+
+        return view;
+    }
+
+    private void loadContacts() {
+        List<User> contactList = db.userDao().getAll();
+        adapter = new ContactAdapter(contactList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void filter(String text) {
+        List<User> filteredList = db.userDao().getAll();
+
+        if (text.isEmpty()) {
+            adapter.setFilteredList(filteredList);
+        } else {
+            List<User> filtered = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                filtered = filteredList.stream()
+                        .filter(user -> user.fullname.toLowerCase().contains(text.toLowerCase()))
+                        .toList();
+            }
+            adapter.setFilteredList(filtered);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_listagem, container, false);
     }
 }
