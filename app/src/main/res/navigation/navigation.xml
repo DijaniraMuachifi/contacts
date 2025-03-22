@@ -2,32 +2,59 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation"
+    android:id="@+id/navegacao"
     app:startDestination="@id/listagem">
-
     <fragment
         android:id="@+id/listagem"
         android:name="com.example.contacts.listagem"
         android:label="fragment_listagem"
-        tools:layout="@layout/fragment_listagem" />
-    <fragment
-        android:id="@+id/listFavorite"
-        android:name="com.example.contacts.listFavorite"
-        android:label="fragment_list_favorite"
-        tools:layout="@layout/fragment_list_favorite" />
-    <fragment
-        android:id="@+id/editContact"
-        android:name="com.example.contacts.EditContact"
-        android:label="fragment_edit_contact"
-        tools:layout="@layout/fragment_edit_contact" />
-    <fragment
-        android:id="@+id/detailsContact"
-        android:name="com.example.contacts.detailsContact"
-        android:label="fragment_details_contact"
-        tools:layout="@layout/fragment_details_contact" />
+        tools:layout="@layout/fragment_listagem" >
+        <action
+            android:id="@+id/action_listagem_to_detailsContact"
+            app:destination="@id/detailsContact" />
+        <action
+            android:id="@+id/action_listagem_to_addContact"
+            app:destination="@id/addContact" />
+        <action
+            android:id="@+id/action_listagem_to_listFavorite"
+            app:destination="@id/listFavorite" />
+    </fragment>
     <fragment
         android:id="@+id/addContact"
         android:name="com.example.contacts.AddContact"
         android:label="fragment_add_contact"
-        tools:layout="@layout/fragment_add_contact" />
+        tools:layout="@layout/fragment_add_contact" >
+        <action
+            android:id="@+id/action_addContact_to_listagem"
+            app:destination="@id/listagem" />
+    </fragment>
+    <fragment
+        android:id="@+id/editContact"
+        android:name="com.example.contacts.EditContact"
+        tools:layout="@layout/fragment_edit_contact" >
+        <action
+            android:id="@+id/action_editContact_to_detailsContact"
+            app:destination="@id/detailsContact" />
+    </fragment>
+    <fragment
+        android:id="@+id/listFavorite"
+        android:name="com.example.contacts.listFavorite"
+        android:label="fragment_list_favorite"
+        tools:layout="@layout/fragment_list_favorite" >
+        <action
+            android:id="@+id/action_listFavorite_to_listagem"
+            app:destination="@id/listagem" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsContact"
+        android:name="com.example.contacts.detailsContact"
+        android:label="fragment_details_contact"
+        tools:layout="@layout/fragment_details_contact" >
+        <action
+            android:id="@+id/action_detailsContact_to_editContact"
+            app:destination="@id/editContact" />
+        <action
+            android:id="@+id/action_detailsContact_to_listagem2"
+            app:destination="@id/listagem" />
+    </fragment>
 </navigation>
