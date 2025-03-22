@@ -1,64 +1,82 @@
 package com.example.contacts;
 
+
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import androidx.appcompat.widget.SearchView; // Importe a classe 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link listFavorite#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.contacts.database.AppDatabase;
+import com.example.contacts.models.User;
+
+import java.util.List;
+
 public class listFavorite extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public listFavorite() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment listFavorite.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static listFavorite newInstance(String param1, String param2) {
-        listFavorite fragment = new listFavorite();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private AppDatabase db;
+    private RecyclerView recyclerView;
+    private ContactAdapter adapter;
+    private SearchView searchView;
+    private ImageView backButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list_favorite, container, false);
+
+        recyclerView = view.findViewById(R.id.favoriteRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        searchView = view.findViewById(R.id.searchView);
+        backButton = view.findViewById(R.id.backButton);
+
+        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "contact_db").allowMainThreadQueries().build();
+
+        loadFavoriteContacts(); // Carrega apenas os contatos favoritos
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+
+        backButton.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
+        return view;
+    }
+
+    private void loadFavoriteContacts() {
+        List<User> favoriteList = db.userDao().getFavorites();
+        adapter = new ContactAdapter(favoriteList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void filter(String text) {
+        List<User> filteredList = db.userDao().getFavorites(); // Inicializa com todos os favoritos
+
+        if (text.isEmpty()) {
+            adapter.setFilteredList(filteredList);
+        } else {
+            List<User> filtered = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                filtered = filteredList.stream()
+                        .filter(user -> user.fullname.toLowerCase().contains(text.toLowerCase()))
+                        .toList();
+            }
+            adapter.setFilteredList(filtered);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_favorite, container, false);
     }
 }
