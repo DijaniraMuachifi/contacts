@@ -2,6 +2,16 @@
     <string name="app_name">Contacts</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="add_contact" />
+    <string name="add_contact">+</string>
+    <string name="contact_photo">Picture</string>
+    <string name="name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone </string>
+    <string name="save_contact">Save</string>
+    <string name="delete">Delete</string>
+    <string name="favorite">favorete</string>
+    <string name="edit" />
+    <string name="back" />
+    <string name="call" />
     <string name="favorites" />
 </resources>
