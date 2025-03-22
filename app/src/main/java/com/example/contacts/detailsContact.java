@@ -1,64 +1,114 @@
 package com.example.contacts;
 
+
+import android.app.AlertDialog;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link detailsContact#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.room.Room;
+
+import com.example.contacts.database.AppDatabase;
+import com.example.contacts.models.User;
+
 public class detailsContact extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private ImageView contactPhoto, backButton, editButton, favoriteButton, deleteButton;
+    private TextView contactName, contactPhone, mobileNumber, contactEmail, shareLocation, shareContact;
+    private AppDatabase db;
+    private int contactId;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_details_contact, container, false);
 
-    public detailsContact() {
-        // Required empty public constructor
-    }
+        contactPhoto = view.findViewById(R.id.contactPhoto);
+        backButton = view.findViewById(R.id.backButton);
+        editButton = view.findViewById(R.id.editButton);
+        favoriteButton = view.findViewById(R.id.favoriteButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
+        contactName = view.findViewById(R.id.contactName);
+        contactPhone = view.findViewById(R.id.contactPhone);
+        mobileNumber = view.findViewById(R.id.mobileNumber);
+        contactEmail = view.findViewById(R.id.contactEmail);
+        // Removido shareLocation e shareContact
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment detailsContact.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static detailsContact newInstance(String param1, String param2) {
-        detailsContact fragment = new detailsContact();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+        db = Room.databaseBuilder(getContext().getApplicationContext(), AppDatabase.class, "contact_db").allowMainThreadQueries().build();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            contactId = getArguments().getInt("contactId", -1);
+            if (contactId != -1) {
+                loadContactDetails();
+            }
+        }
+
+        backButton.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+        editButton.setOnClickListener(v -> editContact());
+        favoriteButton.setOnClickListener(v -> toggleFavorite());
+        deleteButton.setOnClickListener(v -> showDeleteConfirmationDialog());
+
+        return view;
+    }
+
+    private void loadContactDetails() {
+        User user = db.userDao().loadById(contactId);
+        if (user != null) {
+            contactName.setText(user.fullname);
+            contactPhone.setText(user.phone);
+            mobileNumber.setText(user.phone);
+            contactEmail.setText(user.email);
+
+            if (user.photoPath != null && !user.photoPath.isEmpty()) {
+                Uri imageUri = Uri.parse(user.photoPath);
+                contactPhoto.setImageURI(imageUri);
+            }
+
+            if (user.isFavorite) {
+                favoriteButton.setImageResource(android.R.drawable.star_big_on);
+            } else {
+                favoriteButton.setImageResource(android.R.drawable.star_big_off);
+            }
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details_contact, container, false);
+    private void editContact() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("contactId", contactId);
+        Navigation.findNavController(getView()).navigate(R.id.action_detailsContact_to_editContact, bundle);
+    }
+
+    private void toggleFavorite() {
+        User user = db.userDao().loadById(contactId);
+        if (user != null) {
+            user.isFavorite = !user.isFavorite;
+            db.userDao().update(user);
+            loadContactDetails();
+            String message = user.isFavorite ? "Contato adicionado aos favoritos" : "Contato removido dos favoritos";
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Excluir Contato")
+                .setMessage("Tem certeza que deseja excluir este contato?")
+                .setPositiveButton("Sim", (dialog, which) -> deleteContact())
+                .setNegativeButton("Não", null)
+                .show();
+    }
+
+    private void deleteContact() {
+        User user = db.userDao().loadById(contactId);
+        if (user != null) {
+            db.userDao().delete(user);
+            Toast.makeText(getContext(), "Contato excluído com sucesso", Toast.LENGTH_SHORT).show();
+            Navigation.findNavController(getView()).navigate(R.id.action_detailsContact_to_listagem2);
+        }
     }
 }
