@@ -86,6 +86,6 @@
             android:text="@string/save_contact"
             android:textColor="@android:color/white" />
 
-    </LinearLayout>
+    </ConstraintLayout>
 
-</LinearLayout>
+</ConstraintLayout>
