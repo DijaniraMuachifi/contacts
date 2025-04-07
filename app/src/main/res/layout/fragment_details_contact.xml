@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     tools:context=".detailsContact">
 
-    <RelativeLayout
+    <ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
@@ -28,9 +28,10 @@
             android:contentDescription="@string/edit"
             android:src="@android:drawable/ic_menu_edit" />
 
-    </RelativeLayout>
+    </ConstraintLayout>
+    
 
-    <LinearLayout
+    <ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -63,7 +64,7 @@
             android:layout_marginTop="8dp"
             android:textColor="#757575" />
 
-    </LinearLayout>
+    </ConstraintLayout>
 
     <View
         android:layout_width="match_parent"
@@ -71,13 +72,13 @@
         android:background="#E0E0E0"
         android:layout_marginTop="16dp" />
 
-    <LinearLayout
+    <ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
+        <ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -97,7 +98,7 @@
                 android:contentDescription="@string/call"
                 android:src="@android:drawable/ic_menu_call" />
 
-        </LinearLayout>
+        </ConstraintLayout>
 
         <TextView
             android:id="@+id/mobileNumber"
@@ -107,7 +108,7 @@
             android:layout_marginTop="4dp"
             android:textColor="#757575" />
 
-        <LinearLayout
+        <ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -128,7 +129,7 @@
                 android:contentDescription="@string/email"
                 android:src="@android:drawable/ic_dialog_email" />
 
-        </LinearLayout>
+        </ConstraintLayout>
 
         <TextView
             android:id="@+id/contactEmail"
@@ -138,7 +139,7 @@
             android:layout_marginTop="4dp"
             android:textColor="#757575" />
 
-    </LinearLayout>
+    </ConstraintLayout>
 
     <View
         android:layout_width="match_parent"
@@ -146,7 +147,7 @@
         android:background="#E0E0E0"
         android:layout_marginTop="16dp" />
 
-    <LinearLayout
+    <ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -168,6 +169,6 @@
             android:contentDescription="@string/delete"
             android:src="@android:drawable/ic_menu_delete" />
 
-    </LinearLayout>
+    </ConstraintLayout>
 
-</LinearLayout>
+</ConstraintLayout>
