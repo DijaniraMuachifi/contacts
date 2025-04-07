@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".listagem">
 
-    <LinearLayout
+    <ConstraintLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:padding="16dp"
         android:background="#FFFFFF">
 
-        <RelativeLayout
+        <ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -36,7 +36,7 @@
                 android:contentDescription="@string/favorites"
                 android:src="@android:drawable/star_big_on" />
 
-        </RelativeLayout>
+        </ConstraintLayout>
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -47,7 +47,7 @@
             app:iconifiedByDefault="false"
             app:queryHint="Pesquisar" />
 
-    </LinearLayout>
+    </ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -69,4 +69,4 @@
         app:tint="@android:color/white"
         tools:ignore="SpeakableTextPresentCheck" />
 
-</RelativeLayout>
+</ConstraintLayout>
