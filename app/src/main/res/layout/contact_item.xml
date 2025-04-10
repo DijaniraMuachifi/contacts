@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <!-- Foto -->
+    <!-- Foto do Contato -->
     <ImageView
         android:id="@+id/contactPhoto"
         android:layout_width="60dp"
@@ -19,39 +19,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Container dos textos -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/textContainer"
+    <!-- Nome do Contato -->
+    <TextView
+        android:id="@+id/contactName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="Nome do Contato"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/contactPhoto"
         app:layout_constraintTop_toTopOf="@id/contactPhoto"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Telefone do Contato -->
+    <TextView
+        android:id="@+id/contactPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="(99) 99999-9999"
+        android:textSize="16sp"
+        android:textColor="#757575"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@id/contactPhoto"
+        app:layout_constraintTop_toBottomOf="@id/contactName"
         app:layout_constraintBottom_toBottomOf="@id/contactPhoto"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/contactName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nome do Contato"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/contactPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="(99) 99999-9999"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp"
-            android:textColor="#757575"
-            app:layout_constraintStart_toStartOf="@id/contactName"
-            app:layout_constraintTop_toBottomOf="@id/contactName" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
